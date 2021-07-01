@@ -31,6 +31,7 @@ class Database:
         self.close()
 
     def get(self,table,columns,limit=None,where=1):
+
         query = "SELECT {0} from {1} WHERE {2};".format(columns,table,where)
         self.cursor.execute(query)
 
@@ -59,7 +60,7 @@ class Database:
     
     # Check if all required tables are avalible
     def checkMigrations(self):
-        pass
+
         # Books table
         # try:
         #     data = self.get('books','id')
@@ -96,4 +97,6 @@ class Database:
         # except:
         #     self.query("CREATE TABLE `loan_items` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT , `books_id` INT NOT NULL , `user_id` INT NOT NULL)")
         #
-# self.query("CREATE TABLE 'Admins' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'firstname' VARCHAR(128) NOT NULL, 'lastname' VARCHAR(128) NOT NULL, 'password' VARCHAR(128) NOT NULL)")
+        #pass
+        try: self.query("CREATE TABLE 'SuperAdmins' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'firstname' VARCHAR(128) NOT NULL, 'lastname' VARCHAR(128) NOT NULL, 'username' VARCHAR(128) NOT NULL, 'password' VARCHAR(128) NOT NULL)")
+        except: pass
