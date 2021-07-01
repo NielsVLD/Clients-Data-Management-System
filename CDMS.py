@@ -2,7 +2,7 @@
 # Bart Westhoff (0991807) 
 # Niels Krommenhoek
 import re
-
+from classes import Database as sqlClass
 def newUsername():
     _username = input("What will be ur username?: ").lower()
     _firstLetter = _username[0].isalpha()
@@ -66,9 +66,13 @@ class Advisor(User):
     def __init__(self):
         super().__init__()
 
-    def changePassword(self):
+    def changePassword(self, password):
+       # with :
+
         pass
+
     #To update their own password
+
 
     def addClient(self):
         pass
@@ -86,7 +90,7 @@ class SystemAdmin(Advisor):
     def __init__(self):
         super().__init__()
 
-    def changePassword(self):
+    def changePassword(self, password):
         pass
     #To update their own password
 
@@ -129,8 +133,16 @@ class SuperAdmin(SystemAdmin, Advisor):
         self.password = 'Admin!23'
 
     def AddAdmin(self):
-        pass
+        database = sqlClass.Database("analyse.db")
+        firstname = input("firstname?: ")
+        lastname = input("lastname?: ")
+        password = input("password?: ")
+        database.write('Admins', '`firstname`, `lastname`, `password`', f"'{firstname}', '{lastname}', '{password}'")
+        database.commit()
+        database.close()
+
         #To define and add a new admin to the system
+
     def modifyAdmin(self):
         pass
     # To modify or update an existing admin’s account and profile
@@ -144,7 +156,10 @@ class SuperAdmin(SystemAdmin, Advisor):
 
 
 
-
-
+data = sqlClass.Database("analyse.db")
+data.checkMigrations()
+data.close()
 
 p1 = SuperAdmin()
+p1.AddAdmin()
+
