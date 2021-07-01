@@ -138,7 +138,7 @@ class SuperAdmin(SystemAdmin, Advisor):
         firstname = input("firstname?: ")
         lastname = input("lastname?: ")
         password = input("password?: ")
-        database.write('Admins', '`firstname`, `lastname`, `username`, `password`', f"'{firstname}', '{lastname}', '{firstname + lastname}', '{password}'")
+        database.write('SystemAdmins', '`firstname`, `lastname`, `username`, `password`', f"'{firstname}', '{lastname}', '{firstname + lastname}', '{password}'")
         database.commit()
         database.close()
 
@@ -160,9 +160,9 @@ class SuperAdmin(SystemAdmin, Advisor):
 data = sqlClass.Database("analyse.db")
 data.checkMigrations()
 data.close()
-#
-# p1 = SuperAdmin()
-# p1.AddAdmin()
+
+p1 = SuperAdmin()
+p1.AddAdmin()
 
 application = user.userinterface()
 application.mainScreen()
