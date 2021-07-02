@@ -122,13 +122,43 @@ class userinterface:
             database.commit()
             print("Deleted")
 
-
         except: print("not deleted")
         data= database.get(columns='*', table=f'{kind}', where=f"`firstname`='{firstname}' AND `lastname`='{lastname}'")
         print(data)
         database.close()
+
     def modifyPerson(self, kind):
-        pass
+        if kind == "Client":
+            _firstname= input("What is the firstname of the Client?: ")
+            _lastname = input("What is the lastname of the Client?: ")
+
+            choices = ["Modify firstname", "Modify lastname", "Modify streetname", "Modify housenumber", "Next Page"]
+            choice = self.choices(choices, "Wich option do you want to choose?: ")
+            to_change = input(f"What will be the new {choices[choice].split(' ')[1]}")
+            if choice == 1:
+               pass
+            if choice == 2:
+                pass
+            if choice == 3:
+                pass
+            if choice == 4:
+                pass
+            if choice == 5:
+                # 'firstname'  'lastname'  'streetname' 'housenumber' 'zipcode', 'city'  'emailaddress' 'mobilephone'
+                choices_p2 = ["Modify zipcode", "Modify city", "Modify emailaddress", "Modify phone_number", "Previous Page"]
+                choice = self.choices(choices_p2, "Wich option do you want to choose?: ")
+
+                to_change = input(f"What will be the new {choices[choice].split(' ')[1]}")
+                if choice == 1:
+                   pass
+                if choice == 2:
+                    pass
+                if choice == 3:
+                    pass
+                if choice == 4:
+                    pass
+                if choice == 5:
+                    self.modifyPerson(kind)
 
 class Client():
     def __init__(self, firstname, lastname, mail, street,housenumber,zipcode,city,mobile_number):
