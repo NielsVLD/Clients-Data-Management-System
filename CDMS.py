@@ -30,19 +30,21 @@ def register():
 
 
 def newClient():
-    # mail = input("What is the email?: ")
-    # _validEmail = re.search("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", mail)
-    # if _validEmail:
-    #     print("Pass")
-    # street = input("streetname?: ")
-    # if street.isalpha():
-    #     print("pass")
-    # housenumber = input("house number?: ")
-    # if housenumber.isnumeric():
-    #     print("pass")
-    # zipcode = input("zipcode?: ").upper()
-    # if zipcode[0:3].isnumeric() and zipcode[4:5].isalpha() and len(zipcode) ==6:
-    #     print("pass")
+    firstname = input("What is your Firstname?: ")
+    lastname = input("What is your Lastname?: ")
+    mail = input("What is the email?: ")
+    _validEmail = re.search("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", mail)
+    if _validEmail:
+        print("Pass")
+    street = input("streetname?: ")
+    if street.isalpha():
+        print("pass")
+    housenumber = input("house number?: ")
+    if housenumber.isnumeric():
+        print("pass")
+    zipcode = input("zipcode?: ").upper()
+    if zipcode[0:3].isnumeric() and zipcode[4:5].isalpha() and len(zipcode) ==6:
+        print("pass")
     listOfCities = ["Rotterdam", "Amsterdam", "Alkmaar", "Maastricht", "Utrecht", "Almere", "Lelystad", "Maassluis", "Vlaardingen", "Schiedam"]
     index =1
     while index <= len(listOfCities):
@@ -55,13 +57,30 @@ def newClient():
         print("pass")
     mobile_number = "31-6-" + mobile_number
     print(mobile_number)
+    return Client(firstname, lastname,mail,street,housenumber,zipcode,city,mobile_number)
+    #return (firstname, lastname, mail, street,housenumber,zipcode,city,mobile_number)
 # newClient()
+class Client():
+    def __init__(self, firstname, lastname, mail, street,housenumber,zipcode,city,mobile_number):
+        self.firstname = firstname
+        self.lastname = lastname,
+        self.mail = mail
+        self.street = street
+        self.housenumber = housenumber
+        self.zipcode = zipcode
+        self.city = city
+        self.mobile_number = mobile_number
+
+
 
 class User():
 
     def __init__(self):
         self.username = newUsername()
         self.pw = newPassword()
+
+
+
 
 class Advisor(User):
     def __init__(self):

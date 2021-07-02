@@ -1,12 +1,12 @@
 
 from classes import databaseclass as sqlClass
 
+import re
 class userinterface:
     def __init__(self):
         pass
 
     def mainScreen(self):
-
         choice = self.choices(["Login", "Exit application"], "Wich option do you want to choose?: ")
         if choice == 1:
             userinterface.loginScreen(self)
@@ -71,7 +71,6 @@ class userinterface:
         else:
             self.systemAdministatorMenu()
 
-
     def advisorMenu(self):
         choice = self.choices(["Check advisor", "Add advisor", "Modify advisor", "Delete advisor"], "Wich option do you want to choose?: ")
         kind = "Advisors"
@@ -87,19 +86,19 @@ class userinterface:
             self.clientMenu()
 
     def addPerson(self, kind):
+        database = sqlClass.Database("analyse.db")
         if kind == "advisor" or kind == "System administrator" :
-
-            database = sqlClass.Database("analyse.db")
             firstname = input("firstname?: ")
             lastname = input("lastname?: ")
             password = input("password?: ")
             database.write(f'{kind}', '`firstname`, `lastname`, `username`, `password`', f"'{firstname}', '{lastname}', '{firstname + lastname}', '{password}'")
-            database.commit()
-            database.close()
 
         elif kind == "client":
-            pass
+            client = newClient()
+            database.write(f'Clients', '`firstname`, `lastname`, `streetname`, `housenumber`, `zipcode`, `city`, `emailaddress`, `mobilephone`', f"'{client.firstname}', '{client.lastname}', '{client.street}', '{client.housenumber}', '{client.zipcode}', '{client.city}', '{client.mail}', '{client.mobile_number}',")
             # 'firstname'  'lastname'  'streetname' 'housenumber' 'zipcode', 'city'  'emailaddress' 'mobilephone'
+        database.commit()
+        database.close()
 
     def searchPerson(self, kind):
         database = sqlClass.Database("analyse.db")
@@ -130,3 +129,44 @@ class userinterface:
         database.close()
     def modifyPerson(self, kind):
         pass
+
+class Client():
+    def __init__(self, firstname, lastname, mail, street,housenumber,zipcode,city,mobile_number):
+        self.firstname = firstname
+        self.lastname = lastname,
+        self.mail = mail
+        self.street = street
+        self.housenumber = housenumber
+        self.zipcode = zipcode
+        self.city = city
+        self.mobile_number = mobile_number
+
+def newClient():
+    firstname = input("What is your Firstname?: ")
+    lastname = input("What is your Lastname?: ")
+    mail = input("What is the email?: ")
+    _validEmail = re.search("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", mail)
+    if _validEmail:
+        print("Pass")
+    street = input("streetname?: ")
+    if street.isalpha():
+        print("pass")
+    housenumber = input("house number?: ")
+    if housenumber.isnumeric():
+        print("pass")
+    zipcode = input("zipcode?: ").upper()
+    if zipcode[0:3].isnumeric() and zipcode[4:5].isalpha() and len(zipcode) ==6:
+        print("pass")
+    listOfCities = ["Rotterdam", "Amsterdam", "Alkmaar", "Maastricht", "Utrecht", "Almere", "Lelystad", "Maassluis", "Vlaardingen", "Schiedam"]
+    index =1
+    while index <= len(listOfCities):
+        print(f"{index}. {listOfCities[index-1]}")
+        index +=1
+    city = listOfCities[(int(input("In wich city do you live (choose from 1-10)")))-1]
+    print(city)
+    mobile_number = input("What is your mobile number?:\n31-6-")
+    if mobile_number.isnumeric() and len(mobile_number) == 8:
+        print("pass")
+    mobile_number = "31-6-" + mobile_number
+    print(mobile_number)
+    return Client(firstname, lastname,mail,street,housenumber,zipcode,city,mobile_number)
