@@ -104,7 +104,7 @@ class userinterface:
 
         elif kind == "client":
             client = newClient()
-            database.write(f'Clients', '`firstname`, `lastname`, `streetname`, `housenumber`, `zipcode`, `city`, `emailaddress`, `mobilephone`', f"'{client.firstname}', '{client.lastname}', '{client.street}', '{client.housenumber}', '{client.zipcode}', '{client.city}', '{client.mail}', '{client.mobile_number}',")
+            database.write(f'Clients', '`firstname`, `lastname`, `streetname`, `housenumber`, `zipcode`, `city`, `emailaddress`, `mobilephone`', f"'{client.firstname}', '{client.lastname}', '{client.street}', '{client.housenumber}', '{client.zipcode}', '{client.city}', '{client.mail}', '{client.mobile_number}'")
             # 'firstname'  'lastname'  'streetname' 'housenumber' 'zipcode', 'city'  'emailaddress' 'mobilephone'
         database.commit()
         database.close()
@@ -172,7 +172,7 @@ class userinterface:
 class Client():
     def __init__(self, firstname, lastname, mail, street,housenumber,zipcode,city,mobile_number):
         self.firstname = firstname
-        self.lastname = lastname,
+        self.lastname = lastname
         self.mail = mail
         self.street = street
         self.housenumber = housenumber

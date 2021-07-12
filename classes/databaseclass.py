@@ -46,7 +46,7 @@ class Database:
 
     def write(self,table,columns,data):
         
-        query = "INSERT INTO {0} ({1}) VALUES {2};".format(table,columns,data)
+        query = "INSERT INTO {0} ({1}) VALUES ({2});".format(table,columns,data)
 
         self.cursor.execute(query)
 
