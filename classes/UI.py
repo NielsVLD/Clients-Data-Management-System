@@ -1,6 +1,7 @@
 
 from classes import databaseclass as sqlClass
 
+
 import re
 class userinterface:
     def __init__(self):
@@ -21,7 +22,7 @@ class userinterface:
         elif choice == 2:
             _type = "SystemAdmins"
         elif choice == 3:
-            _type = "SuperAdmins"
+            _type = "SuperAdmin"
         else:
             self.loginScreen()
 
@@ -30,7 +31,15 @@ class userinterface:
         database = sqlClass.Database("analyse.db")
         data = database.get(columns='*', table=f'{_type}', where=f"`username`='{_username}' AND `password`='{_password}'")
         print(data)
-        self.systemAdministatorMenu()
+        if _type == "Advisors":
+            self.advisorMenu()
+        if _type == "SystemAdmins":
+            self.systemAdministatorMenu()
+        else:
+            print("Not yet SuperAdmin screen implemented")
+            self.systemAdministatorMenu()
+
+
 
     def choices(self, choices, question):
         index =0
@@ -72,16 +81,16 @@ class userinterface:
             self.systemAdministatorMenu()
 
     def advisorMenu(self):
-        choice = self.choices(["Check advisor", "Add advisor", "Modify advisor", "Delete advisor"], "Wich option do you want to choose?: ")
-        kind = "Advisors"
+        choice = self.choices(["Add new client", "Modify Client", "Search client", "Update advisor password"], "Wich option do you want to choose?: ")
+        kind = "client"
         if choice == 1:
-            self.searchPerson(kind)
-        elif choice == 2:
             self.addPerson(kind)
-        elif choice == 3:
+        elif choice == 2:
             self.modifyPerson(kind)
-        elif choice == 4:
-            self.deletePerson(kind)
+        elif choice == 3:
+            self.searchPerson(kind)
+        # elif choice == 4:
+        #     self.deletePerson(kind)
         else:
             self.clientMenu()
 
@@ -174,6 +183,7 @@ class Client():
 def newClient():
     firstname = input("What is your Firstname?: ")
     lastname = input("What is your Lastname?: ")
+    print(lastname)
     mail = input("What is the email?: ")
     _validEmail = re.search("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", mail)
     if _validEmail:

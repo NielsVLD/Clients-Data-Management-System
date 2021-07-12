@@ -46,7 +46,13 @@ class Database:
 
     def write(self,table,columns,data):
         
-        query = "INSERT INTO {0} ({1}) VALUES ({2});".format(table,columns,data)
+        query = "INSERT INTO {0} ({1}) VALUES {2};".format(table,columns,data)
+
+        self.cursor.execute(query)
+
+    def delete(self,table,colums,data):
+
+        query = "DELETE FROM {0} WHERE id = {2} ;".format(table,colums,data)
 
         self.cursor.execute(query)
 
@@ -103,4 +109,6 @@ class Database:
         try: self.query("CREATE TABLE 'Advisors' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'firstname' VARCHAR(128) NOT NULL, 'lastname' VARCHAR(128) NOT NULL, 'username' VARCHAR(128) NOT NULL, 'password' VARCHAR(128) NOT NULL)")
         except: pass
         try: self.query("CREATE TABLE 'Clients' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'firstname' VARCHAR(128) NOT NULL, 'lastname' VARCHAR(128) NOT NULL, 'streetname' VARCHAR(128) NOT NULL, 'housenumber' INTEGER NOT NULL, 'zipcode' VARCHAR(128) NOT NULL, 'city' VARCHAR(128) NOT NULL, 'emailaddress' VARCHAR(128) NOT NULL, 'mobilephone' VARCHAR(128) NOT NULL)")
+        except: pass
+        try: self.query("CREATE TABLE 'SuperAdmin' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'firstname' VARCHAR(128) NOT NULL, 'lastname' VARCHAR(128) NOT NULL, 'username' VARCHAR(128) NOT NULL, 'password' VARCHAR(128) NOT NULL)")
         except: pass

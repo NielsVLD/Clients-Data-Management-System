@@ -2,6 +2,7 @@
 # Bart Westhoff (0991807) 
 # Niels Krommenhoek
 import re
+import sqlite3
 from classes import databaseclass as sqlClass
 from classes import UI as user
 def newUsername():
@@ -15,7 +16,6 @@ def newUsername():
     return _username
 
 def newPassword():
-
     _password = input("What will be ur password?: ")
     _checkPW = re.search("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", _password)
     if _checkPW:
@@ -29,37 +29,8 @@ def register():
     password = newPassword()
 
 
-def newClient():
-    firstname = input("What is your Firstname?: ")
-    lastname = input("What is your Lastname?: ")
-    mail = input("What is the email?: ")
-    _validEmail = re.search("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", mail)
-    if _validEmail:
-        print("Pass")
-    street = input("streetname?: ")
-    if street.isalpha():
-        print("pass")
-    housenumber = input("house number?: ")
-    if housenumber.isnumeric():
-        print("pass")
-    zipcode = input("zipcode?: ").upper()
-    if zipcode[0:3].isnumeric() and zipcode[4:5].isalpha() and len(zipcode) ==6:
-        print("pass")
-    listOfCities = ["Rotterdam", "Amsterdam", "Alkmaar", "Maastricht", "Utrecht", "Almere", "Lelystad", "Maassluis", "Vlaardingen", "Schiedam"]
-    index =1
-    while index <= len(listOfCities):
-        print(f"{index}. {listOfCities[index-1]}")
-        index +=1
-    city = listOfCities[(int(input("In wich city do you live (choose from 1-10)")))-1]
-    print(city)
-    mobile_number = input("What is your mobile number?:\n31-6-")
-    if mobile_number.isnumeric() and len(mobile_number) == 8:
-        print("pass")
-    mobile_number = "31-6-" + mobile_number
-    print(mobile_number)
-    return Client(firstname, lastname,mail,street,housenumber,zipcode,city,mobile_number)
-    #return (firstname, lastname, mail, street,housenumber,zipcode,city,mobile_number)
-# newClient()
+
+
 class Client():
     def __init__(self, firstname, lastname, mail, street,housenumber,zipcode,city,mobile_number):
         self.firstname = firstname
@@ -70,6 +41,76 @@ class Client():
         self.zipcode = zipcode
         self.city = city
         self.mobile_number = mobile_number
+
+    def newClient(self):
+
+        firstname = input("What is your Firstname?: ")
+        lastname = input("What is your Lastname?: ")
+        mail = input("What is the email?: ")
+        _validEmail = re.search("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", mail)
+        if _validEmail:
+            print("Pass")
+        street = input("streetname?: ")
+        if street.isalpha():
+            print("pass")
+        housenumber = input("house number?: ")
+        if housenumber.isnumeric():
+            print("pass")
+        zipcode = input("zipcode?: ").upper()
+        if zipcode[0:3].isnumeric() and zipcode[4:5].isalpha() and len(zipcode) ==6:
+            print("pass")
+        listOfCities = ["Rotterdam", "Amsterdam", "Alkmaar", "Maastricht", "Utrecht", "Almere", "Lelystad", "Maassluis", "Vlaardingen", "Schiedam"]
+        index =1
+        while index <= len(listOfCities):
+            print(f"{index}. {listOfCities[index-1]}")
+            index +=1
+        city = listOfCities[(int(input("In wich city do you live (choose from 1-10)")))-1]
+        print(city)
+        mobile_number = input("What is your mobile number?:\n31-6-")
+        if mobile_number.isnumeric() and len(mobile_number) == 8:
+            print("pass")
+        mobile_number = "31-6-" + mobile_number
+        print(mobile_number)
+        #1return Client(firstname, lastname,mail,street,housenumber,zipcode,city,mobile_number)
+        
+        
+        database = sqlClass.Database("analyse.db")
+        database.write('Clients', '`firstname`, `lastname`, `streetname`, `housenumber`, `zipcode`, `city`, `emailaddress`, `mobilephone`', f"'{firstname}', '{lastname}', '{street}', '{housenumber}, '{zipcode}, '{city}, '{mail}, '{mobile_number}'")
+        database.commit()
+        database.close()
+
+    def modifyClient(self):
+        
+            _firstname= input("What is the firstname of the Client?: ")
+            _lastname = input("What is the lastname of the Client?: ")
+
+            choices = ["Modify firstname", "Modify lastname", "Modify streetname", "Modify housenumber", "Next Page"]
+            choice = self.choices(choices, "Wich option do you want to choose?: ")
+            to_change = input(f"What will be the new {choices[choice].split(' ')[1]}")
+            if choice == 1:
+               pass
+            if choice == 2:
+                pass
+            if choice == 3:
+                pass
+            if choice == 4:
+                pass
+            if choice == 5:
+                # 'firstname'  'lastname'  'streetname' 'housenumber' 'zipcode', 'city'  'emailaddress' 'mobilephone'
+                choices_p2 = ["Modify zipcode", "Modify city", "Modify emailaddress", "Modify phone_number", "Previous Page"]
+                choice = self.choices(choices_p2, "Wich option do you want to choose?: ")
+
+                to_change = input(f"What will be the new {choices[choice].split(' ')[1]}")
+                if choice == 1:
+                   pass
+                if choice == 2:
+                    pass
+                if choice == 3:
+                    pass
+                if choice == 4:
+                    pass
+                if choice == 5:
+                    pass
 
 
 
@@ -95,7 +136,7 @@ class Advisor(User):
 
 
     def addClient(self):
-        pass
+        Client.newClient(self)
     # To add a new client to the system
 
     def modifyClient(self):
@@ -119,7 +160,13 @@ class SystemAdmin(Advisor):
         pass
 
     def addAdvisor(self):
-        pass
+        database = sqlClass.Database("analyse.db")
+        firstname = input("firstname?: ")
+        lastname = input("lastname?: ")
+        password = input("password?: ")
+        database.write('Advisors', '`firstname`, `lastname`, `username`, `password`', f"'{firstname}', '{lastname}', '{firstname + lastname}', '{password}'")
+        database.commit()
+        database.close()
         # To define and add a new advisor to the system
 
     def modifyAdvisor(self):
@@ -148,6 +195,8 @@ class SystemAdmin(Advisor):
 ## Superadmin intherit allebei omdat systemadmin en adivsor verschillen in inheritance
 class SuperAdmin(SystemAdmin, Advisor):
     ## Error overleggen/ laten staan
+    
+    
     def __init__(self):
         self.username = "superadmin"
         self.password = 'Admin!23'
@@ -174,15 +223,26 @@ class SuperAdmin(SystemAdmin, Advisor):
     # To reset an existing admin’s password (a temporary password)
 
 
-
-
 data = sqlClass.Database("analyse.db")
 data.checkMigrations()
 data.close()
 
-p1 = SuperAdmin()
-p1.AddAdmin()
+# p1 = SuperAdmin()
+# p1.AddAdmin()
+
+
+# database = sqlClass.Database("analyse.db")
+# database.delete('SuperAdmin','','1')
+# database.commit()
+# database.close()
+
+# p2 = Advisor()
+# p2.addClient()
 
 application = user.userinterface()
 application.mainScreen()
+
+
+
+
 
