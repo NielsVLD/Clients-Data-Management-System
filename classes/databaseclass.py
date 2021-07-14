@@ -56,6 +56,15 @@ class Database:
 
         self.cursor.execute(query)
 
+    def updatePassword(self,table,password,username):
+
+            try:
+                query = "UPDATE {0} SET password = {1} WHERE id = 1;".format(table,password,username)
+                self.cursor.execute(query)
+            except:
+                print("something went wrong")
+                return
+
 
     def query(self,sql,values=None):
         if values == None:

@@ -1,20 +1,35 @@
-
-from classes import databaseclass as sqlClass
-
+# CDMS: V2
+# Bart Westhoff (0991807) 
+# Niels Krommenhoek
 
 import re
+import sqlite3
+from classes import databaseclass as sqlClass
+
+Loginusername = ""
+Loginpassword = ""
+def stopApp():
+    quit()
+
 class userinterface:
     def __init__(self):
         pass
 
     def mainScreen(self):
-        choice = self.choices(["Login", "Exit application"], "Wich option do you want to choose?: ")
-        if choice == 1:
-            userinterface.loginScreen(self)
-        if choice == 2:
-            return
+        while True:
+            choice = self.choices(["Login", "Exit application"], "Which option do you want to choose?: ")
+            if choice == 1:
+                userinterface.loginScreen(self)
+            if choice == 2:
+                stopApp()
+            else:
+                print("Incorrect input, try again.")
+                continue
+
 
     def loginScreen(self):
+        
+        global Loginpassword, Loginusername
         choice = self.choices(["Advisor", "System Administrators", "Super Administrator"], "What type of user is logging in?: " )
         _type = None
         if choice == 1:
@@ -24,13 +39,15 @@ class userinterface:
         elif choice == 3:
             _type = "SuperAdmin"
         else:
+            print("Incorrect input, try again.")
             self.loginScreen()
 
-        _username = input("What is your username?: ")
-        _password = input("What is your password?: ")
+        Loginusername = input("What is your username?: ")
+        Loginpassword = input("What is your password?: ")
         database = sqlClass.Database("analyse.db")
-        data = database.get(columns='*', table=f'{_type}', where=f"`username`='{_username}' AND `password`='{_password}'")
-        print(data)
+        try: data = database.get(columns='*', table=f'{_type}', where=f"`username`='{Loginusername}' AND `password`='{Loginpassword}'")
+        except: print("Username or password not correct! try again")
+        #print(data)
         if _type == "Advisors":
             self.advisorMenu()
         if _type == "SystemAdmins":
@@ -38,8 +55,6 @@ class userinterface:
         else:
             print("Not yet SuperAdmin screen implemented")
             self.systemAdministatorMenu()
-
-
 
     def choices(self, choices, question):
         index =0
@@ -84,23 +99,106 @@ class userinterface:
         choice = self.choices(["Add new client", "Modify Client", "Search client", "Update advisor password"], "Wich option do you want to choose?: ")
         kind = "client"
         if choice == 1:
-            self.addPerson(kind)
+            PersonCRUD.addPerson(self,kind)
         elif choice == 2:
-            self.modifyPerson(kind)
+            PersonCRUD.modifyPerson(self,kind)
         elif choice == 3:
-            self.searchPerson(kind)
-        # elif choice == 4:
-        #     self.deletePerson(kind)
+            PersonCRUD.searchPerson(self,kind)
+        elif choice == 4:
+            Advisor.changePassword(self, Loginusername)
         else:
+            print("Incorrect input, try again.")
             self.clientMenu()
+
+
+class Client():
+    def __init__(self, firstname, lastname, mail, street,housenumber,zipcode,city,mobile_number):
+        self.firstname = firstname
+        self.lastname = lastname
+        self.mail = mail
+        self.street = street
+        self.housenumber = housenumber
+        self.zipcode = zipcode
+        self.city = city
+        self.mobile_number = mobile_number
+
+def newClient():
+    firstname = input("What is your Firstname?: ")
+    lastname = input("What is your Lastname?: ")
+    print(lastname)
+    mail = input("What is the email?: ")
+    _validEmail = re.search("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", mail)
+    if _validEmail:
+        print("Pass")
+    street = input("streetname?: ")
+    if street.isalpha():
+        print("pass")
+    housenumber = input("house number?: ")
+    if housenumber.isnumeric():
+        print("pass")
+    zipcode = input("zipcode?: ").upper()
+    if zipcode[0:3].isnumeric() and zipcode[4:5].isalpha() and len(zipcode) ==6:
+        print("pass")
+    listOfCities = ["Rotterdam", "Amsterdam", "Alkmaar", "Maastricht", "Utrecht", "Almere", "Lelystad", "Maassluis", "Vlaardingen", "Schiedam"]
+    index =1
+    while index <= len(listOfCities):
+        print(f"{index}. {listOfCities[index-1]}")
+        index +=1
+    city = listOfCities[(int(input("In wich city do you live (choose from 1-10)")))-1]
+    print(city)
+    mobile_number = input("What is your mobile number?:\n31-6-")
+    if mobile_number.isnumeric() and len(mobile_number) == 8:
+        print("pass")
+    mobile_number = "31-6-" + mobile_number
+    print(mobile_number)
+    return Client(firstname, lastname,mail,street,housenumber,zipcode,city,mobile_number)
+
+
+class Advisor():
+    
+    def __init__(self):
+        super().__init__()
+
+    def changePassword(self, username):
+        database = sqlClass.Database("analyse.db")
+        _password = input("What will be ur password?: ")
+        _checkPW = re.search("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", _password)
+        if _checkPW:
+            print("good")
+        else:
+            print("bad")
+        print(Loginpassword)
+        print(Loginusername)
+        print(username)
+        database.query(f"UPDATE Advisors SET password = '{_password}' WHERE username = '{Loginusername}';")
+        database.commit()
+        database.close()
+
+    #To update their own password
+
+
+    def addClient(self):
+        Client.newClient(self)
+    # To add a new client to the system
+
+    def modifyClient(self):
+        PersonCRUD.modifyPerson()
+    # To modify or update the information of a client in the system
+
+    def searchClient(self):
+        pass
+    # To search and retrieve the information of a client
+
+class PersonCRUD():
 
     def addPerson(self, kind):
         database = sqlClass.Database("analyse.db")
         if kind == "advisor" or kind == "System administrator" :
             firstname = input("firstname?: ")
             lastname = input("lastname?: ")
+            username = input("username?:")
             password = input("password?: ")
-            database.write(f'{kind}', '`firstname`, `lastname`, `username`, `password`', f"'{firstname}', '{lastname}', '{firstname + lastname}', '{password}'")
+            database.write(f'{kind}', '`firstname`, `lastname`, `username`, `password`', f"'{firstname}', '{lastname}', '{username}', '{password}'")
 
         elif kind == "client":
             client = newClient()
@@ -169,44 +267,23 @@ class userinterface:
                 if choice == 5:
                     self.modifyPerson(kind)
 
-class Client():
-    def __init__(self, firstname, lastname, mail, street,housenumber,zipcode,city,mobile_number):
-        self.firstname = firstname
-        self.lastname = lastname
-        self.mail = mail
-        self.street = street
-        self.housenumber = housenumber
-        self.zipcode = zipcode
-        self.city = city
-        self.mobile_number = mobile_number
 
-def newClient():
-    firstname = input("What is your Firstname?: ")
-    lastname = input("What is your Lastname?: ")
-    print(lastname)
-    mail = input("What is the email?: ")
-    _validEmail = re.search("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", mail)
-    if _validEmail:
-        print("Pass")
-    street = input("streetname?: ")
-    if street.isalpha():
-        print("pass")
-    housenumber = input("house number?: ")
-    if housenumber.isnumeric():
-        print("pass")
-    zipcode = input("zipcode?: ").upper()
-    if zipcode[0:3].isnumeric() and zipcode[4:5].isalpha() and len(zipcode) ==6:
-        print("pass")
-    listOfCities = ["Rotterdam", "Amsterdam", "Alkmaar", "Maastricht", "Utrecht", "Almere", "Lelystad", "Maassluis", "Vlaardingen", "Schiedam"]
-    index =1
-    while index <= len(listOfCities):
-        print(f"{index}. {listOfCities[index-1]}")
-        index +=1
-    city = listOfCities[(int(input("In wich city do you live (choose from 1-10)")))-1]
-    print(city)
-    mobile_number = input("What is your mobile number?:\n31-6-")
-    if mobile_number.isnumeric() and len(mobile_number) == 8:
-        print("pass")
-    mobile_number = "31-6-" + mobile_number
-    print(mobile_number)
-    return Client(firstname, lastname,mail,street,housenumber,zipcode,city,mobile_number)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+userinterface().mainScreen()
