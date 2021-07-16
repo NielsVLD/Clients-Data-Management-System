@@ -33,6 +33,7 @@ class Database:
     def get(self,table,columns,limit=None,where=1):
 
         query = "SELECT {0} from {1} WHERE {2};".format(columns,table,where)
+        #print(query)
         self.cursor.execute(query)
 
         # fetch data
