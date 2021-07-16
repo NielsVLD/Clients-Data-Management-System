@@ -193,19 +193,24 @@ def newClient():
     firstname = input("What is your Firstname?: ")
     firstname = Encrypt(firstname)
     lastname = input("What is your Lastname?: ")
+    lastname = Encrypt(lastname)
     mail = input("What is the email?: ")
     _validEmail = re.search("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", mail)
     if _validEmail:
         print("Pass")
+        mail = Encrypt(mail)
     street = input("streetname?: ")
     if street.isalpha():
         print("pass")
+        street = Encrypt(street)
     housenumber = input("house number?: ")
     if housenumber.isnumeric():
         print("pass")
+        housenumber = Encrypt(housenumber)
     zipcode = input("zipcode?: ").upper()
     if zipcode[0:3].isnumeric() and zipcode[4:5].isalpha() and len(zipcode) ==6:
         print("pass")
+        zipcode = Encrypt(zipcode)
     listOfCities = ["Rotterdam", "Amsterdam", "Alkmaar", "Maastricht", "Utrecht", "Almere", "Lelystad", "Maassluis", "Vlaardingen", "Schiedam"]
     index =1
     while index <= len(listOfCities):
@@ -213,11 +218,13 @@ def newClient():
         index +=1
     city = listOfCities[(int(input("In wich city do you live (choose from 1-10)")))-1]
     print(city)
+    city = Encrypt(city)
     mobile_number = input("What is your mobile number?:\n31-6-")
     if mobile_number.isnumeric() and len(mobile_number) == 8:
         print("pass")
     mobile_number = "31-6-" + mobile_number
     print(mobile_number)
+    mobile_number = Encrypt(mobile_number)
     return Client(firstname, lastname,mail,street,housenumber,zipcode,city,mobile_number)
 
 
@@ -261,9 +268,13 @@ class PersonCRUD():
         database = sqlClass.Database("analyse.db")
         if kind == "Advisors" or kind == "SystemAdmins" :
             firstname = input("firstname?: ")
+            firstname = Encrypt(firstname)
             lastname = input("lastname?: ")
+            lastname = Encrypt(lastname)
             username = input("username?:")
+            username = Encrypt(username)
             password = input("password?: ")
+            password = Encrypt(password)
             database.write(f'{kind}', '`firstname`, `lastname`, `username`, `password`', f"'{firstname}', '{lastname}', '{username}', '{password}'")
 
         elif kind == "client":
@@ -279,13 +290,19 @@ class PersonCRUD():
         while loop:
             database = sqlClass.Database("analyse.db")
             firstname = input("firstname?: ")
+            firstname = Encrypt(firstname)
+            print(firstname)
             lastname = input("lastname?: ")
+            lastname = Encrypt(lastname)
+            print(lastname)
             try:
                 data = database.get(columns='*', table=f'Clients', where=f"`firstname`='{firstname}' AND `lastname`='{lastname}'")
+                database.commit()
                 for row in data:
                     if row[1] != firstname and row[2] != lastname:
                         print("Client not found, try again.")
-                        self.searchPerson(self)
+                        print(row[1],row[2])
+                        #self.searchPerson(self)
 
                 # values = ["ID: ", "Firstname: ","Lastname: ","Streetname: ","Housenumber: ", "Zipcode: ","City: ","Email: ", "Mobilephone: " ]
                 # i = 0
@@ -296,19 +313,18 @@ class PersonCRUD():
                 print("Client found!:\n")
                 for row in data:
                     print("ID          |",row[0])
-                    print("Firstname   |",row[1])
-                    print("Lastname    |",row[2])
-                    print("Streetname  |",row[3])
-                    print("Housenumber |",row[4])
-                    print("Zipcode     |",row[5])
-                    print("City        |",row[6])
-                    print("Email       |",row[7])
-                    print("Mobilephone |",row[8],"\n")
+                    print("Firstname   |",Decrypt(row[1]))
+                    print("Lastname    |",Decrypt(row[2]))
+                    print("Streetname  |",Decrypt(row[3]))
+                    print("Housenumber |",Decrypt(row[4]))
+                    print("Zipcode     |",Decrypt(row[5]))
+                    print("City        |",Decrypt(row[6]))
+                    print("Email       |",Decrypt(row[7]))
+                    print("Mobilephone |",Decrypt(row[8]),"\n")
                     loop = False
 
-            except: print("Person not found, try again.")
+            except: print("Person not found, try again. excpet")
 
-            database.commit()
             database.close()
   
     def deletePerson(self, kind):
@@ -395,6 +411,7 @@ def Encrypt(input):
 def Decrypt(output):
 
     text = output
+
     encryption =  ""
     for char in text:
         if char == " ":
