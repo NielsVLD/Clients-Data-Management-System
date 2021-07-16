@@ -4,7 +4,8 @@
 
 import re
 import sqlite3
-from classes import databaseclass as sqlClass
+import io
+import databaseclass as sqlClass
 
 Loginusername = ""
 Loginpassword = ""
@@ -148,7 +149,7 @@ class userinterface:
         elif choice == 10:
             Advisor.changePassword(self,Loginusername)
         elif choice == 11:
-            pass
+            makeBackup()
         elif choice == 12:
             pass
         elif choice == 13:
@@ -237,8 +238,8 @@ class Advisor():
         while True:
             database = sqlClass.Database("analyse.db")
             _password = input("What will be ur password? Min length of 5, max length of 20, MUST start with a letter: ")
-            _checkPW = re.search("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", _password)
-            if _checkPW:
+            _checkPW = usernameChecker(_password)
+            if _checkPW == 0:
                 database.query(f"UPDATE Advisors SET password = '{_password}' WHERE username = '{username}';")
                 database.commit()
                 database.close()
@@ -291,10 +292,9 @@ class PersonCRUD():
             database = sqlClass.Database("analyse.db")
             firstname = input("firstname?: ")
             firstname = Encrypt(firstname)
-            print(firstname)
+            
             lastname = input("lastname?: ")
             lastname = Encrypt(lastname)
-            print(lastname)
             try:
                 data = database.get(columns='*', table=f'Clients', where=f"`firstname`='{firstname}' AND `lastname`='{lastname}'")
                 database.commit()
@@ -464,6 +464,21 @@ def usernameChecker(input):
         if flag ==-1:
             print("Username is not valid!")
 
+def makeBackup():
+    conn = sqlClass.Database("analyse.db") 
+    
+    # Open() function 
+    with io.open('backupdatabase_dump.sql', 'w') as p: 
+            
+        # iterdump() function
+        for line in conn.iterdump(): 
+            
+            p.write('%s\n' % line)
+        
+    print(' Backup performed successfully!')
+    print(' Data Saved as backupdatabase_dump.sql')
+    
+    conn.close()
 
 
 
@@ -474,6 +489,8 @@ def usernameChecker(input):
 
 
 
-
+data = sqlClass.Database("analyse.db")
+data.checkMigrations()
+data.close()
 
 userinterface().mainScreen()
