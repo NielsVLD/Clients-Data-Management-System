@@ -38,19 +38,24 @@ class userinterface:
             self.loginScreen()
         loop = True
         count = 0
-        loginusername = input("What is your username?: ")
-        loginpassword = input("What is your password?: ")
+        loginusername = ""
+        loginpassword = ""
         #TODO: change to superadmin and Admin!23
         while loop and loginusername != "super" and loginpassword != "123":
+
             loginusername = input("What is your username?: ")
             loginpassword = input("What is your password?: ")
+            loginusername = Helper().Encrypt(loginusername)
+            loginpassword = Helper().Encrypt(loginpassword)
             database = Database("analyse.db")
+            print(loginusername, loginpassword)
             try:
                 data = database.get(columns='*', table=f'{_type}',
                                     where=f"`username`='{loginusername}' AND `password`='{loginpassword}'")
             except:
                 print("Username or password not correct! try again")
             for row in data:
+
                 if row[3] == loginusername and row[4] == loginpassword:
                     loop = False
                     count = 1
@@ -167,20 +172,23 @@ class userinterface:
             self.systemAdministatorMenu()
 
     def advisorMenu(self):
-        choice = self.choices(["Add new client", "Modify Client", "Search client", "Update advisor password"],
+        choice = self.choices(["Add new client | Works", "Modify Client | works", "Search client | works ", "Update advisor password"],
                               "\nWhich option do you want to choose?: ")
-        kind = "client"
-        if choice == 1:
-            PersonCRUD.addPerson(self, kind)
-            self.advisorMenu()
+
+        if choice == 3:
+            PersonCRUD().searchPerson("Clients")
+            self.superAdminMenu()
+
+        elif choice == 1:
+            PersonCRUD().addPerson("Clients")
+            self.superAdminMenu()
+
         elif choice == 2:
-            PersonCRUD.modifyPerson(self, kind)
-            self.advisorMenu()
-        elif choice == 3:
-            PersonCRUD.searchPerson(self, kind)
-            self.advisorMenu()
+            PersonCRUD().modifyPerson("Clients")
+            self.superAdminMenu()
+
         elif choice == 4:
-            Advisor.changePassword(self, loginusername)
+            Advisor().changePassword()
             self.advisorMenu()
         else:
             print("Incorrect input, try again.")

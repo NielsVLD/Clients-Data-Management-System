@@ -39,7 +39,7 @@ class Database:
 
         # fetch data
         rows = self.cursor.fetchall()
-
+        print(f"{rows=}")
         return rows[len(rows)-limit if limit else 0:]
 
     def getLast(self,table,columns):
