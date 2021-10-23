@@ -1,4 +1,4 @@
-from CDMS.databaseclass import Database
+from cdms.databaseclass import Database
 import io
 
 class Helper:
@@ -6,32 +6,37 @@ class Helper:
         quit()
 
     def Encrypt(self,name):
-        encryption = ""
-        for char in name:
-            if char == " ":
-                encryption = encryption + char
-            elif char.isupper():
-                encryption += chr((ord(char) + 22 - 65) % 26 + 65)
-            elif char.isnumeric():
-                encryption += char
+        message = name.upper()
+        alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        result = ""
+        key = 4
+        for letter in message:
+            if letter in alpha:  # if the letter is actually a letter
+                # find the corresponding ciphertext letter in the alphabet
+                letter_index = (alpha.find(letter) + key) % len(alpha)
+
+                result = result + alpha[letter_index]
             else:
-                encryption += chr((ord(char) + 22 - 97) % 26 + 97)
-        return encryption
+                result = result + letter
+
+        return result
 
     def Decrypt(self, name):
 
+        message = name.upper()
+        alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        result = ""
+        key = 4
+        for letter in message:
+            if letter in alpha:  # if the letter is actually a letter
+                # find the corresponding ciphertext letter in the alphabet
+                letter_index = (alpha.find(letter) - key) % len(alpha)
 
-        encryption = ""
-        for char in name:
-            if char == " ":
-                encryption = encryption + char
-            elif char.isupper():
-                encryption += chr((ord(char) - 22 - 65) % 26 + 65)
-            elif char.isnumeric():
-                encryption += char
+                result = result + alpha[letter_index]
             else:
-                encryption += chr((ord(char) - 22 - 97) % 26 + 97)
-        return encryption
+                result = result + letter
+
+        return result
 
     def nameChecker(self, name):
         # TODO: Niels even naar kijken

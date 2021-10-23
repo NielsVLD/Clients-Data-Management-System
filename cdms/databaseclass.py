@@ -90,4 +90,6 @@ class Database:
         try: self.query("CREATE TABLE 'Logging' ('number' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(128) NOT NULL, 'datetime' VARCHAR(128) NOT NULL, 'description' VARCHAR(128) NOT NULL, 'suspicious' VARCHAR(128) NOT NULL)")
         except: pass
         self.open("analyse.db")
+        self.commit()
+
 

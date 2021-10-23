@@ -1,6 +1,6 @@
-from CDMS.clientClass import Client
-from CDMS.databaseclass import Database
-from CDMS.helperClass import Helper
+from cdms.clientClass import Client
+from cdms.databaseclass import Database
+from cdms.helperClass import Helper
 
 
 
@@ -39,6 +39,8 @@ class PersonCRUD():
 
             lastname = input("lastname?: ")
             lastname = Helper().Encrypt(lastname)
+            print(firstname)
+            print(lastname)
             try:
                 data = database.get(columns='*', table=f'${kind}',
                                     where=f"`firstname`='{firstname}' AND `lastname`='{lastname}'")
@@ -81,15 +83,15 @@ class PersonCRUD():
         firstname = input("firstname?: ")
 
         lastname = input("lastname?: ")
-        firstname = Helper().Decrypt(firstname)
-        lastname = Helper().Decrypt(lastname)
+        firstname = Helper().Encrypt(firstname)
+        lastname = Helper().Encrypt(lastname)
         print(firstname)
         print(lastname)
         try:
             # database.query(f"DELETE FROM 'SystemAdmins' WHERE 'firstname'='{firstname}' AND 'lastname'='{lastname}'")
             database.query(f"DELETE FROM '{kind}' WHERE firstname='{firstname}' AND lastname='{lastname}'")
             database.commit()
-            database.close()
+
             print("Deleted")
 
         except:
@@ -97,14 +99,16 @@ class PersonCRUD():
         data = database.get(columns='*', table=f'{kind}',
                             where=f"`firstname`='{firstname}' AND `lastname`='{lastname}'")
         print(data)
-        database.close()
+
 
     def modifyPerson(self, kind):
 
-        from CDMS.userinterfaceClass import userinterface
+        from cdms.userinterfaceClass import userinterface
         database = Database("analyse.db")
         _firstname = input(f"What is the firstname of the {kind[:-1]}?: ")
         _lastname = input(f"What is the lastname of the {kind[:-1]}?: ")
+        _firstname = Helper().Encrypt(_firstname)
+        _lastname = Helper().Encrypt(_lastname)
         data = database.get(columns='*', table=f'{kind}',
                             where=f"`firstname`='{_firstname}' AND `lastname`='{_lastname}'")
         for row in data:
@@ -120,13 +124,14 @@ class PersonCRUD():
             if len(newfirstname) < 20:
             #if Helper().nameChecker(newfirstname) == True:
                 newfirstname = Helper().Encrypt(newfirstname)
+
                 database.query(
                     f"UPDATE Clients SET firstname = '{newfirstname}' WHERE firstname = '{_firstname}' AND lastname = '{_lastname}';")
                 database.commit()
                 database.close()
                 # TODO: check wich type is logged
 
-                userinterface().superAdminMenu()
+                #userinterface().superAdminMenu()
             else:
                 print("Invalid name, try again.")
                 PersonCRUD.modifyPerson(self, kind)

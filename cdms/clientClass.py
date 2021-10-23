@@ -1,6 +1,6 @@
 import re
 
-from CDMS.helperClass import Helper
+from cdms.helperClass import Helper
 
 
 class Client:

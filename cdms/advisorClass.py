@@ -1,7 +1,7 @@
 
-from CDMS.helperClass import Helper
-from CDMS.personCrudClass import PersonCRUD
-from CDMS.databaseclass import Database
+from cdms.helperClass import Helper
+from cdms.personCrudClass import PersonCRUD
+from cdms.databaseclass import Database
 
 
 class Advisor():
@@ -25,7 +25,7 @@ class Advisor():
     # To update their own password
 
     def addClient(self):
-        from CDMS.clientClass import Client
+        from cdms.clientClass import Client
         Client.newClient(self)
 
     # To add a new client to the system
