@@ -86,7 +86,7 @@ class userinterface:
             ["List of users | not ready", "Check client | works", "Add client | works", "Modify client | works",
              "Delete client | works",
              "Add a new advisor | Works", "Modify advisor | Works", "Delete advisor | works", "reset advisor password",
-             "change systemadmin password", "make a backup | not ready", "see log(s) | not ready", "Logout | works"],
+             "change systemadmin password", "make a backup | works", "see log(s) | not ready", "Logout | works"],
             "Wich option do you want to choose?: ")
         if choice == 1:
             pass
@@ -114,13 +114,13 @@ class userinterface:
             PersonCRUD().deletePerson("Advisors")
             self.superAdminMenu()
         elif choice == 9:
-            Helper().changePassword("Advisors")
+            PersonCRUD().changePassword("Advisors")
             self.superAdminMenu()
         elif choice == 10:
-            Helper().changePassword("SystemAdmins")
+            PersonCRUD().changePassword("SystemAdmins")
             self.superAdminMenu()
         elif choice == 11:
-            pass
+            Helper().makeBackup()
         elif choice == 12:
             pass
         elif choice == 13:

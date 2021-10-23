@@ -1,6 +1,6 @@
 from cdms.databaseclass import Database
 import io
-
+import sqlite3
 class Helper:
     def stopApp(self):
         quit()
@@ -26,7 +26,7 @@ class Helper:
         message = name.upper()
         alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         result = ""
-        key = 4
+        key =4
         for letter in message:
             if letter in alpha:  # if the letter is actually a letter
                 # find the corresponding ciphertext letter in the alphabet
@@ -77,12 +77,12 @@ class Helper:
                 print("Username is not valid!")
 
     def makeBackup(self):
-        conn = Database("analyse.db")
+        conn = sqlite3.connect(('analyse.db'))
 
         # Open() function
-        with open('backupdatabase_dump.sql', 'w') as p:
+        with io.open('analyse_backup.sql', 'w') as p:
             # iterdump() function
-            for line in conn:
+            for line in conn.iterdump():
                 p.write('%s\n' % line)
 
         print(' Backup performed successfully!')
