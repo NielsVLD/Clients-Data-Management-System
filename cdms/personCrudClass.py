@@ -115,47 +115,15 @@ class PersonCRUD():
             if row[1] != _firstname and row[2] != _lastname:
                 print("Client not found, try again.")
                 PersonCRUD.modifyPerson(self, kind)
-
-        choices = ["Modify firstname", "Modify lastname", "Modify streetname", "Modify housenumber", "Next Page"]
+        attr = ["firstname", "lastname", "username", "password"]
+        choices = []
+        for att in attr:
+            choices.append(f"Modify {att}")
         choice = userinterface().choices(choices, "Wich option do you want to choose?: ")
 
-        if choice == 1:
-            newfirstname = input("What will be the new firstname? ")
-            if len(newfirstname) < 20:
-            #if Helper().nameChecker(newfirstname) == True:
-                newfirstname = Helper().Encrypt(newfirstname)
-
-                database.query(
-                    f"UPDATE Clients SET firstname = '{newfirstname}' WHERE firstname = '{_firstname}' AND lastname = '{_lastname}';")
-                database.commit()
-                database.close()
-                # TODO: check wich type is logged
-
-                #userinterface().superAdminMenu()
-            else:
-                print("Invalid name, try again.")
-                PersonCRUD.modifyPerson(self, kind)
-        if choice == 2:
-            pass
-        if choice == 3:
-            pass
-        if choice == 4:
-            pass
-        if choice == 5:
-            pass
-                # 'firstname'  'lastname'  'streetname' 'housenumber' 'zipcode', 'city'  'emailaddress' 'mobilephone'
-                # choices_p2 = ["Modify zipcode", "Modify city", "Modify emailaddress", "Modify phone_number", "Previous Page"]
-                # choice = self.choices(choices_p2, "Wich option do you want to choose?: ")
-
-                # to_change = input(f"What will be the new {choices[choice].split(' ')[choices_p2]}")
-                # if choices_p2 == 1:
-                #    pass
-                # if choices_p2 == 2:
-                #     pass
-                # if choices_p2 == 3:
-                #     pass
-                # if choices_p2 == 4:
-                #     pass
-                # if choices_p2 == 5:
-                #     self.modifyPerson(kind)
-
+        new_data = input(f"What will be the new {attr[choice-1]}")
+        new_data = Helper().Encrypt(new_data)
+        database.query(
+            f"UPDATE {kind} SET {attr[choice-1]} = '{new_data}' WHERE firstname = '{_firstname}' AND lastname = '{_lastname}';")
+        database.commit()
+        database.close()

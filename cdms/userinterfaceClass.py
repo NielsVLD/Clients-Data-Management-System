@@ -85,7 +85,7 @@ class userinterface:
         choice = self.choices(
             ["List of users | not ready", "Check client | partial ready", "Add client | works", "Modify client | works",
              "Delete client | works",
-             "Add a new advisor", "Modify advisor", "Delete advisor", "reset advisor password",
+             "Add a new advisor | Works", "Modify advisor", "Delete advisor", "reset advisor password",
              "change systemadmin password", "make a backup | not ready", "see log(s) | not ready", "Press q to logout"],
             "Wich option do you want to choose?: ")
         if choice == 1:
