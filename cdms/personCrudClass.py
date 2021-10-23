@@ -32,43 +32,27 @@ class PersonCRUD():
     def searchPerson(self, kind):
         loop = True
         count = 0
+        database = Database("analyse.db")
         while loop:
-            database = Database("analyse.db")
+
             firstname = input("firstname?: ")
             firstname = Helper().Encrypt(firstname)
 
             lastname = input("lastname?: ")
             lastname = Helper().Encrypt(lastname)
-            print(firstname)
-            print(lastname)
+            data = database.get(columns='*', table=f'{kind}',
+                                where=f"`firstname`='{firstname}' AND `lastname`='{lastname}'")
+            database.commit()
             try:
-                data = database.get(columns='*', table=f'${kind}',
-                                    where=f"`firstname`='{firstname}' AND `lastname`='{lastname}'")
-                database.commit()
-                for row in data:
-                    if row[1] != firstname and row[2] != lastname:
-                        print("Client not found, try again.")
-                        print(row[1], row[2])
-                        # self.searchPerson(self)
-
-                # values = ["ID: ", "Firstname: ","Lastname: ","Streetname: ","Housenumber: ", "Zipcode: ","City: ","Email: ", "Mobilephone: " ]
-                # i = 0
-                # while i < 9:
-                #     #print(values[i])
-                #     print(data[0])
-                #     i += 1
-                #TODO: list data of user
-                print("Client found!:\n")
-                print(data)
                 for row in data:
                     print("ID          |", row[0])
                     print("Firstname   |", Helper().Decrypt(row[1]))
                     print("Lastname    |", Helper().Decrypt(row[2]))
-                    print("Streetname  |", Helper().Decrypt(row[3]))
-                    print("Housenumber |", Helper().Decrypt(row[4]))
-                    print("Zipcode     |", Helper().Decrypt(row[5]))
-                    print("City        |", Helper().Decrypt(row[6]))
-                    print("Email       |", Helper().Decrypt(row[7]))
+                    print("Streetname  |", row[3])
+                    print("Housenumber |", row[4])
+                    print("Zipcode     |", row[5])
+                    print("City        |", row[6])
+                    print("Email       |", row[7])
                     print("Mobilephone |", Helper().Decrypt(row[8]), "\n")
                     loop = False
 
@@ -88,6 +72,9 @@ class PersonCRUD():
         print(firstname)
         print(lastname)
         try:
+            data = database.get(columns='*', table=f'{kind}',
+                                where=f"`firstname`='{firstname}' AND `lastname`='{lastname}'")
+            print(data)
             # database.query(f"DELETE FROM 'SystemAdmins' WHERE 'firstname'='{firstname}' AND 'lastname'='{lastname}'")
             database.query(f"DELETE FROM '{kind}' WHERE firstname='{firstname}' AND lastname='{lastname}'")
             database.commit()
@@ -96,9 +83,7 @@ class PersonCRUD():
 
         except:
             print("not deleted")
-        data = database.get(columns='*', table=f'{kind}',
-                            where=f"`firstname`='{firstname}' AND `lastname`='{lastname}'")
-        print(data)
+
 
 
     def modifyPerson(self, kind):
@@ -127,3 +112,27 @@ class PersonCRUD():
             f"UPDATE {kind} SET {attr[choice-1]} = '{new_data}' WHERE firstname = '{_firstname}' AND lastname = '{_lastname}';")
         database.commit()
         database.close()
+
+    def changePassword(self, kind):
+        while True:
+            database = Database("analyse.db")
+
+            #_checkPW = Helper().usernameChecker(_password)
+            # TODO: niels even kijken
+        #    if _checkPW == 0:
+            username = input("For extra security please fill in your username:\n")
+            username = Helper().Encrypt(username)
+            _password = input("For extra security please fill in your password:\n")
+
+            #TODO Niels check if match
+            _password = input("What will be ur password? Min length of 5, max length of 20, MUST start with a letter: ")
+            _password = Helper().Encrypt(_password)
+            database.query(f"UPDATE {kind} SET password = '{_password}' WHERE username = '{username}';")
+            database.commit()
+            database.close()
+            break
+            #     break
+            # else:
+            #     print("Password not in the required criteria, try again.")
+
+    # To update  password

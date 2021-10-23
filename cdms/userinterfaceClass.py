@@ -83,10 +83,10 @@ class userinterface:
 
     def superAdminMenu(self):
         choice = self.choices(
-            ["List of users | not ready", "Check client | partial ready", "Add client | works", "Modify client | works",
+            ["List of users | not ready", "Check client | works", "Add client | works", "Modify client | works",
              "Delete client | works",
-             "Add a new advisor | Works", "Modify advisor", "Delete advisor", "reset advisor password",
-             "change systemadmin password", "make a backup | not ready", "see log(s) | not ready", "Press q to logout"],
+             "Add a new advisor | Works", "Modify advisor | Works", "Delete advisor | works", "reset advisor password",
+             "change systemadmin password", "make a backup | not ready", "see log(s) | not ready", "Logout | works"],
             "Wich option do you want to choose?: ")
         if choice == 1:
             pass
@@ -114,11 +114,10 @@ class userinterface:
             PersonCRUD().deletePerson("Advisors")
             self.superAdminMenu()
         elif choice == 9:
-            clientUsername = input("What is the username of the client you want to reset the password for? ")
-            Advisor().changePassword(clientUsername)
+            Helper().changePassword("Advisors")
             self.superAdminMenu()
         elif choice == 10:
-            Advisor().changePassword(loginusername)
+            Helper().changePassword("SystemAdmins")
             self.superAdminMenu()
         elif choice == 11:
             pass
