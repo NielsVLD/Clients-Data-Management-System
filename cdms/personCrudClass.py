@@ -2,7 +2,7 @@ from cdms.clientClass import Client
 from cdms.databaseclass import Database
 from cdms.helperClass import Helper
 
-
+database.write(f"Logging", '`username`, `datetime`, `description`, `suspicious`', f"'{firstname}', '{lastname}', '{username}', '{password}'")
 
 class PersonCRUD():
 
@@ -32,6 +32,8 @@ class PersonCRUD():
     def searchPerson(self, kind):
         loop = True
         count = 0
+        user= Helper().checkLoggedIn()
+        print(user)
         database = Database("analyse.db")
         while loop:
 

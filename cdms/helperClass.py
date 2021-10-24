@@ -1,6 +1,7 @@
 from cdms.databaseclass import Database
 import io
 import sqlite3
+import json
 class Helper:
     def stopApp(self):
         quit()
@@ -89,3 +90,12 @@ class Helper:
         print(' Data Saved as backupdatabase_dump.sql')
 
         conn.close()
+    def logUsername(self, username):
+        _dict = {"username": username}
+        with open("username.json", "w+") as f:
+            json.dump(_dict, f)
+
+    def checkLoggedIn(self):
+        with open("username.json", "r") as f:
+            _dict = json.load(f)
+        return _dict["username"]

@@ -62,7 +62,7 @@ class userinterface:
             if count == 0:
                 print("Wrong username or password, try again.\n")
                 loop = True
-
+        Helper().logUsername(loginusername)
         if _type == "Advisors":
             self.advisorMenu()
         if _type == "SystemAdmins":
@@ -218,7 +218,7 @@ class userinterface:
         elif choice == 11:
             Helper().makeBackup()
         elif choice == 12:
-            pass
+            Helper().checkLogs()
         elif choice == 13:
             userinterface().mainScreen()
         else:
