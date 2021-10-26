@@ -39,6 +39,45 @@ class Helper:
 
         return result
 
+
+
+    def passwordChecker(self, password):
+            #What will be ur password? Min length of 8, no longer than 30 characters, MUST have at least one lowercase letter, one uppercase letter, one digit and one special character
+            #password = input('please enter password')
+            nums = '0123456789'
+            alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            alpha_lower = "abcdefghijklmnopqrstuvwxyz"
+            special = "~!@#$%^&*_-+=`|{\()}[]:;'<>,.?/"
+            x=0
+            y=0
+            z=0
+            w=0
+
+            while len(password) < 8 or len(password) > 30:
+                password=input('\n Please enter correct password 1')
+
+            for i in range(len(password)):
+                if password[i] in nums:
+                    x=1
+                elif password[i] in alpha:
+                    y=1
+                elif password[i] in alpha_lower:
+                    z=1
+                elif password[i] in special:
+                    w=1
+            sum = x+y+z+w
+            if sum != 4:
+                password=input('\n Please enter correct password. 2')
+            else:
+                print('\n Password is accepted.')
+
+            
+        
+
+
+
+
+
     def nameChecker(self, name):
         # TODO: Niels even naar kijken
         flag = 0
@@ -58,25 +97,13 @@ class Helper:
 
     def usernameChecker(self, username):
 
-        flag = 0
-        while True:
-            if (len(username) > 20):
-                flag = -1
-                break
-            elif (len(username) < 5):
-                flag -= 1
-                break
-            else:
-                flag = 0
-                break
-            for word in username.split():
-                if word[0].isdigit():
-                    flag -= 1
-                    break
+            while len(username) < 5 or len(username) > 20:
+                password=input('\n Please enter correct username')
+            
 
-            if flag == -1:
-                print("Username is not valid!")
-
+            
+            
+      
     def makeBackup(self):
         conn = sqlite3.connect(('analyse.db'))
 
