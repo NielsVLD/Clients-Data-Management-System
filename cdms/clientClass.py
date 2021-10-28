@@ -33,7 +33,7 @@ class Client:
                 print("Email is incorrect, try again.")
         loop = True
         while loop:
-            street = input("streetname?: ")
+            street = input("What is the streetname?: ")
             if street.isalpha():
                 street = Helper().Encrypt(street)
                 loop = False
@@ -41,7 +41,7 @@ class Client:
                 print("Streetname is incorrect, try again.")
         loop = True
         while loop:
-            housenumber = input("house number?: ")
+            housenumber = input("What is the house number?: ")
             if housenumber.isnumeric():
                 housenumber = Helper().Encrypt(housenumber)
                 loop = False
@@ -49,9 +49,10 @@ class Client:
                 print("Housenumber is incorrect, try again.")
         loop = True
         while loop:
-            zipcode = input("zipcode?: ").upper()
+            zipcode = input("What is the zipcode?: ").upper()
             if zipcode[0:3].isnumeric() and zipcode[4:5].isalpha() and len(zipcode) == 6:
                 loop = False;
+                zipcode = Helper().Encrypt(zipcode)
             else:
                 print("Wrong zipcode, try again.")
         listOfCities = ["Rotterdam", "Amsterdam", "Alkmaar", "Maastricht", "Utrecht", "Almere", "Lelystad", "Maassluis",
