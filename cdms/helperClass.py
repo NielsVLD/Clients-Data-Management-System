@@ -54,7 +54,7 @@ class Helper:
             w=0
 
             while len(password) < 8 or len(password) > 30:
-                password=input('\n Please enter correct password 1')
+                password=input('\n Please enter correct password. Min length of 8, no longer than 30 characters, MUST have at least one lowercase letter, one uppercase letter, one digit and one special character : ')
 
             for i in range(len(password)):
                 if password[i] in nums:
@@ -67,9 +67,10 @@ class Helper:
                     w=1
             sum = x+y+z+w
             if sum != 4:
-                password=input('\n Please enter correct password. 2')
+                password=input('\n Please enter correct password. Min length of 8, no longer than 30 characters, MUST have at least one lowercase letter, one uppercase letter, one digit and one special character :')
             else:
                 print('\n Password is accepted.')
+                return password
 
             
         
@@ -96,9 +97,9 @@ class Helper:
                 return False
 
     def usernameChecker(self, username):
-
             while len(username) < 5 or len(username) > 20:
-                password=input('\n Please enter correct username')
+                username=input('\n Please enter correct username, name needs to be between 5 and 20 characters : ')
+            return username
             
 
             

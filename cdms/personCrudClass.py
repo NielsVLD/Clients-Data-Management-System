@@ -2,7 +2,7 @@ from cdms.clientClass import Client
 from cdms.databaseclass import Database
 from cdms.helperClass import Helper
 
-database.write(f"Logging", '`username`, `datetime`, `description`, `suspicious`', f"'{firstname}', '{lastname}', '{username}', '{password}'")
+#database.write(f"Logging", '`username`, `datetime`, `description`, `suspicious`', f"'{firstname}', '{lastname}', '{username}', '{password}'")
 
 class PersonCRUD():
 
@@ -14,8 +14,10 @@ class PersonCRUD():
             lastname = input("lastname?: ")
             lastname = Helper().Encrypt(lastname)
             username = input("username?:")
+            username = Helper().usernameChecker(username)
             username = Helper().Encrypt(username)
             password = input("password?: ")
+            password = Helper().passwordChecker(password)
             password = Helper().Encrypt(password)
             database.write(f'{kind}', '`firstname`, `lastname`, `username`, `password`',
                            f"'{firstname}', '{lastname}', '{username}', '{password}'")
@@ -50,11 +52,11 @@ class PersonCRUD():
                     print("ID          |", row[0])
                     print("Firstname   |", Helper().Decrypt(row[1]))
                     print("Lastname    |", Helper().Decrypt(row[2]))
-                    print("Streetname  |", row[3])
-                    print("Housenumber |", row[4])
-                    print("Zipcode     |", row[5])
-                    print("City        |", row[6])
-                    print("Email       |", row[7])
+                    print("Streetname  |", Helper().Decrypt(row[3]))
+                    print("Housenumber |", Helper().Decrypt(row[4]))
+                    print("Zipcode     |", Helper().Decrypt(row[5]))
+                    print("City        |", Helper().Decrypt(row[6]))
+                    print("Email       |", Helper().Decrypt(row[7]))
                     print("Mobilephone |", Helper().Decrypt(row[8]), "\n")
                     loop = False
 
@@ -138,3 +140,64 @@ class PersonCRUD():
             #     print("Password not in the required criteria, try again.")
 
     # To update  password
+
+    def choices(self, choices, question):
+        index = 0
+        while index < len(choices):
+            print(f"{index + 1}. {choices[index]}")
+            index += 1
+        c = input(question)
+        if c.isnumeric():
+            return int(c)
+        else:
+            self.choices(choices, question)
+    def checkUsers(self, kind):
+        loop = True
+        database = Database("analyse.db")
+        while loop:
+            choice = self.choices(["Check Advisors", "Check System Administrators", "Check Super Administrator"],
+                                "Who do you want to view?: ")
+            _type = None
+            if choice == 1:
+                loop = False
+                print("Hello")
+                _type = 'Advisors'
+                # Display data
+                print('\nAdvisors: \n')
+                data = database.get(columns='*', table=f'{_type}')
+                for row in data:
+                    print("ID          |", row[0])
+                    print("Firstname   |", Helper().Decrypt(row[1]))
+                    print("Lastname    |", Helper().Decrypt(row[2]))
+                    print("Username    |", Helper().Decrypt(row[3]))
+                    print("Role        | Advisor\n")
+                
+                               
+            elif choice == 2:
+                _type = 'SystemAdmins'
+                print('\SystemAdmins: \n')
+                data = database.get(columns='*', table=f'{_type}')
+                for row in data:
+                    print(row)
+                    print("ID          |", row[0])
+                    print("Firstname   |", Helper().Decrypt(row[1]))
+                    print("Lastname    |", Helper().Decrypt(row[2]))
+                    print("Username    |", Helper().Decrypt(row[3]))
+                    print("Role        | SystemAdmin\n")
+                loop = False
+            elif choice == 3:
+                _type = 'SuperAdmin'
+                print('SuperAdmin: \n')
+                data = database.get(columns='*', table=f'{_type}')
+                for row in data:
+                    print("ID          |", row[0])
+                    print("Firstname   |", Helper().Decrypt(row[1]))
+                    print("Lastname    |", Helper().Decrypt(row[2]))
+                    print("Username    |", Helper().Decrypt(row[3]))
+                    print("Role        | SuperAdmin\n")
+                loop = False
+            else:
+                print("Incorrect input, try again.")
+        
+        database.close()
+        

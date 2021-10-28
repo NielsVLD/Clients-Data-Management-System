@@ -1,6 +1,6 @@
 import sqlite3
 
-from cdms.helperClass import Helper
+
 
 
 
@@ -41,7 +41,9 @@ class Database:
         query = "SELECT {0} from {1} WHERE {2};".format(columns, table, where)
         # print(query)
         self.cursor.execute(query)
+        """
         import datetime
+        from cdms.helperClass import Helper
         username = Helper().checkLoggedIn()
         datetime = datetime.datetime.now().strftime("%a %w %b %Y")
         description = "data has been requested"
@@ -49,36 +51,44 @@ class Database:
         self.cursor.execute(f"Logging", '`username`, `datetime`, `description`, `suspicious`',
                             f"'{username}', '{datetime}', '{description}', '{suspicous}'")
         # fetch data
+        """
         rows = self.cursor.fetchall()
-        print(f"{rows=}")
+        #print(f"{rows=}")
         return rows[len(rows) - limit if limit else 0:]
 
     def getLast(self, table, columns):
 
         return self.get(table, columns, limit=1)[0]
 
+    
     def write(self, table, columns, data):
         query = "INSERT INTO {0} ({1}) VALUES ({2});".format(table, columns, data)
+        """
         import datetime
+        from cdms.helperClass import Helper
         username = Helper().checkLoggedIn()
         datetime = datetime.datetime.now().strftime("%a %w %b %Y")
         description = "data has been added"
         suspicous = "yes"
         self.cursor.execute(f"Logging", '`username`, `datetime`, `description`, `suspicious`',
                             f"'{username}', '{datetime}', '{description}', '{suspicous}'")
+        """
         self.cursor.execute(query)
         self.commit()
 
     def delete(self, table, colums, data):
 
         query = "DELETE FROM {0} WHERE id = {2} ;".format(table, colums, data)
+        """
         import datetime
+        from cdms.helperClass import Helper
         username = Helper().checkLoggedIn()
         datetime = datetime.datetime.now().strftime("%a %w %b %Y")
         description = "data has been deleted"
         suspicous = "yes"
         self.cursor.execute(f"Logging", '`username`, `datetime`, `description`, `suspicious`',
                             f"'{username}', '{datetime}', '{description}', '{suspicous}'")
+        """
         self.cursor.execute(query)
 
     def updatePassword(self, table, password, username):
@@ -86,13 +96,16 @@ class Database:
         try:
             query = "UPDATE {0} SET password = {1} WHERE id = 1;".format(table, password, username)
             self.cursor.execute(query)
+            """
             import datetime
+            from cdms.helperClass import Helper
             username = Helper().checkLoggedIn()
             datetime = datetime.datetime.now().strftime("%a %w %b %Y")
             description = f"{username} password has been updated"
             suspicous = "yes"
             self.cursor.execute(f"Logging", '`username`, `datetime`, `description`, `suspicious`',
                                 f"'{username}', '{datetime}', '{description}', '{suspicous}'")
+            """
         except:
             print("something went wrong")
 

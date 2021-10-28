@@ -2,12 +2,12 @@ from cdms.advisorClass import Advisor
 from cdms.helperClass import Helper
 from cdms.personCrudClass import PersonCRUD
 from cdms.databaseclass import Database
-
-
+ 
+ 
 class userinterface:
     def __init__(self):
         pass
-
+ 
     def mainScreen(self):
         database = Database("analyse.db")
         database.checkMigrations()
@@ -20,9 +20,9 @@ class userinterface:
         else:
             print("Incorrect input, try again.")
             self.mainScreen()
-
+ 
     def loginScreen(self):
-
+ 
         global loginusername, loginpassword
         choice = self.choices(["Advisor", "System Administrators", "Super Administrator"],
                               "What type of user is logging in?: ")
@@ -41,27 +41,27 @@ class userinterface:
         loginusername = ""
         loginpassword = ""
         #TODO: change to superadmin and Admin!23
-        while loop and loginusername != "super" and loginpassword != "123":
-
+        while loop:
+ 
             loginusername = input("What is your username?: ")
             loginpassword = input("What is your password?: ")
             loginusername = Helper().Encrypt(loginusername)
             loginpassword = Helper().Encrypt(loginpassword)
             database = Database("analyse.db")
-            print(loginusername, loginpassword)
+ 
             try:
                 data = database.get(columns='*', table=f'{_type}',
                                     where=f"`username`='{loginusername}' AND `password`='{loginpassword}'")
             except:
-                print("Username or password not correct! try again")
+                    print("Username or password not correct! try again")
             for row in data:
-
+ 
                 if row[3] == loginusername and row[4] == loginpassword:
-                    loop = False
-                    count = 1
+                        loop = False
+                        count = 1
             if count == 0:
-                print("Wrong username or password, try again.\n")
-                loop = True
+                    print("Wrong username or password, try again.\n")
+                    loop = True
         Helper().logUsername(loginusername)
         if _type == "Advisors":
             self.advisorMenu()
@@ -69,6 +69,7 @@ class userinterface:
             self.systemAdministatorMenu()
         if _type == "SuperAdmin":
             self.superAdminMenu()
+
 
     def choices(self, choices, question):
         index = 0
@@ -80,24 +81,25 @@ class userinterface:
             return int(c)
         else:
             self.choices(choices, question)
-
+ 
     def superAdminMenu(self):
         choice = self.choices(
-            ["List of users | not ready", "Check client | works", "Add client | works", "Modify client | works",
+            ["List of users | ready", "Check client | works", "Add client | works", "Modify client | works",
              "Delete client | works",
              "Add a new advisor | Works", "Modify advisor | Works", "Delete advisor | works", "reset advisor password",
              "change systemadmin password", "make a backup | works", "see log(s) | not ready", "Logout | works"],
             "Wich option do you want to choose?: ")
         if choice == 1:
-            pass
+            PersonCRUD().checkUsers("Clients")
+            self.superAdminMenu()
         elif choice == 2:
             PersonCRUD().searchPerson("Clients")
             self.superAdminMenu()
-
+ 
         elif choice == 3:
             PersonCRUD().addPerson("Clients")
             self.superAdminMenu()
-
+ 
         elif choice == 4:
             PersonCRUD().modifyPerson("Clients")
             self.superAdminMenu()
@@ -128,7 +130,7 @@ class userinterface:
         else:
             print("Wrong input, try again.")
             self.superAdminMenu()
-
+ 
     def systemAdministatorMenu(self):
         choice = self.choices(
             ["List of users | not ready", "Check client | works", "Add client | works", "Modify client | works",
@@ -141,11 +143,11 @@ class userinterface:
         elif choice == 2:
             PersonCRUD().searchPerson("Clients")
             self.superAdminMenu()
-
+ 
         elif choice == 3:
             PersonCRUD().addPerson("Clients")
             self.superAdminMenu()
-
+ 
         elif choice == 4:
             PersonCRUD().modifyPerson("Clients")
             self.superAdminMenu()
@@ -176,7 +178,7 @@ class userinterface:
         else:
             print("Wrong input, try again.")
             self.systemAdministatorMenu()
-
+ 
     def advisorMenu(self):
         choice = self.choices(
             ["List of users | not ready", "Check client | works", "Add client | works", "Modify client | works",
@@ -189,11 +191,11 @@ class userinterface:
         elif choice == 2:
             PersonCRUD().searchPerson("Clients")
             self.superAdminMenu()
-
+ 
         elif choice == 3:
             PersonCRUD().addPerson("Clients")
             self.superAdminMenu()
-
+ 
         elif choice == 4:
             PersonCRUD().modifyPerson("Clients")
             self.superAdminMenu()
