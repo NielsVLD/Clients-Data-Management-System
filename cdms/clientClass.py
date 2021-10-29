@@ -64,13 +64,12 @@ class Client:
         city = listOfCities[(int(input("In wich city do you live (choose from 1-10)"))) - 1]
         print(city)
         city = Helper().Encrypt(city)
-        mobile_number = input("What is your mobile number?:\n31-6-")
         loop = True
         while loop:
+            mobile_number = input("What is your mobile number?:\n31-6-")
             if mobile_number.isnumeric() and len(mobile_number) == 8:
                 loop = False
             else:
-            
                 print("mobile number is not correct, try again.")
             
         mobile_number = "31-6-" + mobile_number

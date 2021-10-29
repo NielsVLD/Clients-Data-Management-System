@@ -12,6 +12,7 @@ class userinterface:
         database = Database("analyse.db")
         database.checkMigrations()
         database.close()
+        self.superAdminMenu()
         choice = self.choices(["Login", "Exit application"], "Which option do you want to choose?: ")
         if choice == 1:
             userinterface.loginScreen(self)
