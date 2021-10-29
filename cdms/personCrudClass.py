@@ -53,11 +53,11 @@ class PersonCRUD():
                     print("Firstname   |", Helper().Decrypt(row[1]))
                     print("Lastname    |", Helper().Decrypt(row[2]))
                     print("Streetname  |", Helper().Decrypt(row[3]))
-                    print("Housenumber |", Helper().Decrypt(row[4]))
-                    print("Zipcode     |", Helper().Decrypt(row[5]))
+                    print("Housenumber |", row[4])
+                    print("Zipcode     |", str(Helper().Decrypt(row[5])))
                     print("City        |", Helper().Decrypt(row[6]))
                     print("Email       |", Helper().Decrypt(row[7]))
-                    print("Mobilephone |", Helper().Decrypt(row[8]), "\n")
+                    print("Mobilephone |", row[8]), "\n"
                     loop = False
 
             except:
