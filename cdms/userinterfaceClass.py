@@ -40,7 +40,6 @@ class userinterface:
         count = 0
         loginusername = ""
         loginpassword = ""
-        #TODO: change to superadmin and Admin!23
         while loop:
  
             loginusername = input("What is your username?: ")
@@ -136,7 +135,7 @@ class userinterface:
             ["List of users | not ready", "Check client | works", "Add client | works", "Modify client | works",
              "Delete client | works",
              "Add a new advisor | Works", "Modify advisor | Works", "Delete advisor | works", "reset advisor password",
-             "change systemadmin password", "make a backup | works", "see log(s) | not ready", "Logout | works"],
+             "Change systemadmin password", "make a backup | works", "see log(s) | not ready", "Logout | works"],
             "Wich option do you want to choose?: ")
         if choice == 1:
             pass
@@ -181,48 +180,24 @@ class userinterface:
  
     def advisorMenu(self):
         choice = self.choices(
-            ["List of users | not ready", "Check client | works", "Add client | works", "Modify client | works",
-             "Delete client | works",
-             "Add a new advisor | Works", "Modify advisor | Works", "Delete advisor | works", "reset advisor password",
-             "change systemadmin password", "make a backup | works", "see log(s) | not ready", "Logout | works"],
+            ["Add client | works", "Modify client | works", "Search client",
+             "Reset advisor password",
+            "Logout | works"],
             "Wich option do you want to choose?: ")
         if choice == 1:
-            pass
-        elif choice == 2:
-            PersonCRUD().searchPerson("Clients")
-            self.superAdminMenu()
- 
-        elif choice == 3:
             PersonCRUD().addPerson("Clients")
-            self.superAdminMenu()
- 
+            self.advisorMenu()
+        elif choice == 2:
+            PersonCRUD.modifyPerson("Clients")
+            self.advisorMenu()
+        elif choice == 3:
+            PersonCRUD().searchPerson("Clients")
+            self.advisorMenu()
         elif choice == 4:
-            PersonCRUD().modifyPerson("Clients")
-            self.superAdminMenu()
+            PersonCRUD.changePassword("Advisors")
+            self.advisorMenu()
         elif choice == 5:
-            PersonCRUD().deletePerson("Clients")
-            self.superAdminMenu()
-        elif choice == 6:
-            PersonCRUD().addPerson("Advisors")
-            self.superAdminMenu()
-        elif choice == 7:
-            PersonCRUD().modifyPerson("Advisors")
-            self.superAdminMenu()
-        elif choice == 8:
-            PersonCRUD().deletePerson("Advisors")
-            self.superAdminMenu()
-        elif choice == 9:
-            PersonCRUD().changePassword("Advisors")
-            self.superAdminMenu()
-        elif choice == 10:
-            PersonCRUD().changePassword("SystemAdmins")
-            self.superAdminMenu()
-        elif choice == 11:
-            Helper().makeBackup()
-        elif choice == 12:
-            Helper().checkLogs()
-        elif choice == 13:
-            userinterface().mainScreen()
+            self.loginScreen()
         else:
             print("Wrong input, try again.")
             self.advisorMenu()
