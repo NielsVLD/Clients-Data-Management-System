@@ -41,21 +41,22 @@ class userinterface:
         count = 0
         loginusername = ""
         loginpassword = ""
-        while loop and loginusername != "super" and loginpassword != "123":
+        while loop:
  
             loginusername = input("What is your username?: ")
             loginpassword = input("What is your password?: ")
+            if loginpassword == "Admin!23" and loginusername == "superadmin":
+                break
             loginusername = Helper().Encrypt(loginusername)
             loginpassword = Helper().Encrypt(loginpassword)
             database = Database("analyse.db")
- 
+         
             try:
                 data = database.get(columns='*', table=f'{_type}',
                                     where=f"`username`='{loginusername}' AND `password`='{loginpassword}'")
             except:
                     print("Username or password not correct! try again")
             for row in data:
- 
                 if row[3] == loginusername and row[4] == loginpassword:
                         loop = False
                         count = 1
