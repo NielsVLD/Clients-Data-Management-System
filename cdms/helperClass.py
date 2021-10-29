@@ -68,6 +68,7 @@ class Helper:
             sum = x+y+z+w
             if sum != 4:
                 password=input('\n Please enter correct password. Min length of 8, no longer than 30 characters, MUST have at least one lowercase letter, one uppercase letter, one digit and one special character :')
+                Helper().passwordChecker(password)
             else:
                 print('\n Password is accepted.')
                 return password
@@ -127,3 +128,24 @@ class Helper:
         with open("username.json", "r") as f:
             _dict = json.load(f)
         return _dict["username"]
+
+    def seelogs(self):
+        print("went in funciton")
+        database = Database("analyse.db")
+        kind = "Logging"
+        data= database.get(columns='*', table=f'{kind}')
+        database.commit()
+        print(data)
+        try:
+            for row in data:
+                print("ID          |", row[0])
+                print("username   |", row[1])
+                print("datetime    |", row[2])
+                print("description  |", row[3])
+                print("sus |", row[4])
+                print("\n")
+
+        except:
+            print("Person not found, try again. excpet")
+
+        database.close()

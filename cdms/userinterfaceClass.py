@@ -12,7 +12,6 @@ class userinterface:
         database = Database("analyse.db")
         database.checkMigrations()
         database.close()
-        self.superAdminMenu()
         choice = self.choices(["Login", "Exit application"], "Which option do you want to choose?: ")
         if choice == 1:
             userinterface.loginScreen(self)
@@ -41,7 +40,7 @@ class userinterface:
         count = 0
         loginusername = ""
         loginpassword = ""
-        while loop:
+        while loop and loginusername != "super" and loginpassword != "123":
  
             loginusername = input("What is your username?: ")
             loginpassword = input("What is your password?: ")
@@ -86,7 +85,7 @@ class userinterface:
         choice = self.choices(
             ["List of users | ready", "Check client | works", "Add client | works", "Modify client | works",
              "Delete client | works",
-             "Add a new advisor | Works", "Modify advisor | Works", "Delete advisor | works", "reset advisor password",
+             "Add a new advisor | Works", "Modify advisor | Works", "Delete advisor | works", "reset advisor password", "Add new systemadmin",
              "change systemadmin password", "make a backup | works", "see log(s) | not ready", "Logout | works"],
             "Wich option do you want to choose?: ")
         if choice == 1:
@@ -119,13 +118,17 @@ class userinterface:
             PersonCRUD().changePassword("Advisors")
             self.superAdminMenu()
         elif choice == 10:
+            PersonCRUD().addPerson("SystemAdmins")
+        elif choice == 11:
             PersonCRUD().changePassword("SystemAdmins")
             self.superAdminMenu()
-        elif choice == 11:
-            Helper().makeBackup()
         elif choice == 12:
-            pass
+            Helper().makeBackup()
         elif choice == 13:
+            print("see logs init")
+            Helper().seelogs()
+            self.superAdminMenu()
+        elif choice == 14:
             userinterface().mainScreen()
         else:
             print("Wrong input, try again.")
@@ -182,7 +185,7 @@ class userinterface:
     def advisorMenu(self):
         choice = self.choices(
             ["Add client | works", "Modify client | works", "Search client",
-             "Reset advisor password",
+             "Reset your password",
             "Logout | works"],
             "Wich option do you want to choose?: ")
         if choice == 1:
@@ -195,7 +198,7 @@ class userinterface:
             PersonCRUD().searchPerson("Clients")
             self.advisorMenu()
         elif choice == 4:
-            PersonCRUD.changePassword("Advisors")
+            PersonCRUD().changePassword("Advisors")
             self.advisorMenu()
         elif choice == 5:
             self.loginScreen()
