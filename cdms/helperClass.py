@@ -138,14 +138,16 @@ class Helper:
         print(data)
         try:
             for row in data:
-                print("ID          |", row[0])
-                print("username   |", row[1])
-                print("datetime    |", row[2])
-                print("description  |", row[3])
-                print("sus |", row[4])
-                print("\n")
-
+                print("ID             |", row[0])
+                print("Username       |", Helper().Decrypt(row[1]))
+                print("Date           |", row[2])
+                print("Description    |", Helper().Decrypt(row[3]))
+                print("suspicious     |", Helper().Decrypt(row[4]), "\n")
+                
         except:
             print("Person not found, try again. excpet")
 
         database.close()
+        
+            
+        

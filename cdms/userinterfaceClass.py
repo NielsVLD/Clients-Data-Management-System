@@ -12,6 +12,7 @@ class userinterface:
         database = Database("analyse.db")
         database.checkMigrations()
         database.close()
+        
         choice = self.choices(["Login", "Exit application"], "Which option do you want to choose?: ")
         if choice == 1:
             userinterface.loginScreen(self)
@@ -83,10 +84,10 @@ class userinterface:
  
     def superAdminMenu(self):
         choice = self.choices(
-            ["List of users | ready", "Check client | works", "Add client | works", "Modify client | works",
-             "Delete client | works",
-             "Add a new advisor | Works", "Modify advisor | Works", "Delete advisor | works", "reset advisor password", "Add new systemadmin",
-             "change systemadmin password", "make a backup | works", "see log(s) | not ready", "Logout | works"],
+            ["List of users", "Check client", "Add client", "Modify client",
+             "Delete client",
+             "Add a new advisor", "Modify advisor", "Delete advisor", "Add new systemadmin",
+             "change passwords", "make a backup", "see log(s)", "Logout"],
             "Wich option do you want to choose?: ")
         if choice == 1:
             PersonCRUD().checkUsers("Clients")
@@ -114,21 +115,20 @@ class userinterface:
         elif choice == 8:
             PersonCRUD().deletePerson("Advisors")
             self.superAdminMenu()
+    
         elif choice == 9:
-            PersonCRUD().changePassword("Advisors")
+            PersonCRUD().addPerson("SystemAdmins")
             self.superAdminMenu()
         elif choice == 10:
-            PersonCRUD().addPerson("SystemAdmins")
-        elif choice == 11:
-            PersonCRUD().changePassword("SystemAdmins")
+            PersonCRUD().changePassword("SuperAdmin")
             self.superAdminMenu()
-        elif choice == 12:
+        elif choice == 11:
             Helper().makeBackup()
-        elif choice == 13:
+        elif choice == 12:
             print("see logs init")
             Helper().seelogs()
             self.superAdminMenu()
-        elif choice == 14:
+        elif choice == 13:
             userinterface().mainScreen()
         else:
             print("Wrong input, try again.")
@@ -136,10 +136,10 @@ class userinterface:
  
     def systemAdministatorMenu(self):
         choice = self.choices(
-            ["List of users | not ready", "Check client | works", "Add client | works", "Modify client | works",
-             "Delete client | works",
-             "Add a new advisor | Works", "Modify advisor | Works", "Delete advisor | works", "reset advisor password",
-             "Change systemadmin password", "make a backup | works", "see log(s) | not ready", "Logout | works"],
+            ["List of users", "Check client", "Add client", "Modify client",
+             "Delete client",
+             "Add a new advisor", "Modify advisor", "Delete advisor",
+             "Change passwords", "make a backup", "see log(s)", "Logout"],
             "Wich option do you want to choose?: ")
         if choice == 1:
             pass
@@ -166,17 +166,16 @@ class userinterface:
         elif choice == 8:
             PersonCRUD().deletePerson("Advisors")
             self.superAdminMenu()
+    
         elif choice == 9:
-            PersonCRUD().changePassword("Advisors")
-            self.superAdminMenu()
-        elif choice == 10:
             PersonCRUD().changePassword("SystemAdmins")
             self.superAdminMenu()
-        elif choice == 11:
+        elif choice == 10:
             Helper().makeBackup()
+        elif choice == 11:
+            Helper().seelogs()
+            self.superAdminMenu()
         elif choice == 12:
-            pass
-        elif choice == 13:
             userinterface().mainScreen()
         else:
             print("Wrong input, try again.")
@@ -184,9 +183,9 @@ class userinterface:
  
     def advisorMenu(self):
         choice = self.choices(
-            ["Add client | works", "Modify client | works", "Search client",
+            ["Add client | works", "Modify client", "Search client",
              "Reset your password",
-            "Logout | works"],
+            "Logout"],
             "Wich option do you want to choose?: ")
         if choice == 1:
             PersonCRUD().addPerson("Clients")
