@@ -2,7 +2,8 @@ from cdms.clientClass import Client
 from cdms.databaseclass import Database
 from cdms.helperClass import Helper
 
-#database.write(f"Logging", '`username`, `datetime`, `description`, `suspicious`', f"'{firstname}', '{lastname}', '{username}', '{password}'")
+
+# database.write(f"Logging", '`username`, `datetime`, `description`, `suspicious`', f"'{firstname}', '{lastname}', '{username}', '{password}'")
 
 class PersonCRUD():
 
@@ -34,7 +35,7 @@ class PersonCRUD():
     def searchPerson(self, kind):
         loop = True
         count = 0
-        user= Helper().checkLoggedIn()
+        user = Helper().checkLoggedIn()
         print(user)
         database = Database("analyse.db")
         while loop:
@@ -65,7 +66,6 @@ class PersonCRUD():
 
         database.close()
 
-
     def deletePerson(self, kind):
         database = Database("analyse.db")
         firstname = input("firstname?: ")
@@ -80,15 +80,15 @@ class PersonCRUD():
                                 where=f"`firstname`='{firstname}' AND `lastname`='{lastname}'")
             print(data)
             # database.query(f"DELETE FROM 'SystemAdmins' WHERE 'firstname'='{firstname}' AND 'lastname'='{lastname}'")
-            database.query(f"DELETE FROM '{kind}' WHERE firstname='{firstname}' AND lastname='{lastname}'")
+            # database.query(f"DELETE FROM '{kind}' WHERE firstname='{firstname}' AND lastname='{lastname}'", )
+            database.query(sql="DELETE FROM '?' WHERE firstname='?' AND lastname='?'",
+                           values=(kind, firstname, lastname))
             database.commit()
 
             print("Deleted")
 
         except:
             print("not deleted")
-
-
 
     def modifyPerson(self, kind):
 
@@ -110,10 +110,10 @@ class PersonCRUD():
             choices.append(f"Modify {att}")
         choice = userinterface().choices(choices, "Wich option do you want to choose?: ")
 
-        new_data = input(f"What will be the new {attr[choice-1]}")
+        new_data = input(f"What will be the new {attr[choice - 1]}")
         new_data = Helper().Encrypt(new_data)
         database.query(
-            f"UPDATE {kind} SET {attr[choice-1]} = '{new_data}' WHERE firstname = '{_firstname}' AND lastname = '{_lastname}';")
+            sql="UPDATE ? SET ? = '?' WHERE firstname = '?' AND lastname = '?';", values=(kind, attr[choice - 1], new_data, _firstname, _lastname))
         database.commit()
         database.close()
 
@@ -121,17 +121,17 @@ class PersonCRUD():
         while True:
             database = Database("analyse.db")
 
-            #_checkPW = Helper().usernameChecker(_password)
+            # _checkPW = Helper().usernameChecker(_password)
             # TODO: niels even kijken
-        #    if _checkPW == 0:
+            #    if _checkPW == 0:
             username = input("For extra security please fill in your username:\n")
             username = Helper().Encrypt(username)
             _password = input("For extra security please fill in your password:\n")
 
-            #TODO Niels check if match
+            # TODO Niels check if match
             _password = input("What will be ur password? Min length of 5, max length of 20, MUST start with a letter: ")
             _password = Helper().Encrypt(_password)
-            database.query(f"UPDATE {kind} SET password = '{_password}' WHERE username = '{username}';")
+            database.query(f"UPDATE ? SET password = '?' WHERE username = '?';", values=(kind, _password, username))
             database.commit()
             database.close()
             break
@@ -151,12 +151,13 @@ class PersonCRUD():
             return int(c)
         else:
             self.choices(choices, question)
+
     def checkUsers(self, kind):
         loop = True
         database = Database("analyse.db")
         while loop:
             choice = self.choices(["Check Advisors", "Check System Administrators", "Check Super Administrator"],
-                                "Who do you want to view?: ")
+                                  "Who do you want to view?: ")
             _type = None
             if choice == 1:
                 loop = False
@@ -171,8 +172,8 @@ class PersonCRUD():
                     print("Lastname    |", Helper().Decrypt(row[2]))
                     print("Username    |", Helper().Decrypt(row[3]))
                     print("Role        | Advisor\n")
-                
-                               
+
+
             elif choice == 2:
                 _type = 'SystemAdmins'
                 print('\SystemAdmins: \n')
@@ -198,6 +199,5 @@ class PersonCRUD():
                 loop = False
             else:
                 print("Incorrect input, try again.")
-        
+
         database.close()
-        

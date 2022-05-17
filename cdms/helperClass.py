@@ -17,6 +17,8 @@ class Helper:
                 letter_index = (alpha.find(letter) + key) % len(alpha)
 
                 result = result + alpha[letter_index]
+            if letter.isnummeric():
+                result = result + alpha[letter]
             else:
                 result = result + letter
 

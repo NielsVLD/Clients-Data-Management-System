@@ -1,10 +1,6 @@
 import sqlite3
 
 
-
-
-
-
 class Database:
     def __init__(self, name=None):
         self.conn = None
@@ -38,7 +34,7 @@ class Database:
 
     def get(self, table, columns, limit=None, where=1):
 
-        query = "SELECT {0} from {1} WHERE {2};".format(columns, table, where)
+        query = "SELECT ? from ? WHERE ?;", (columns, table, where)
         # print(query)
         self.cursor.execute(query)
         """
@@ -53,16 +49,14 @@ class Database:
         # fetch data
         """
         rows = self.cursor.fetchall()
-        #print(f"{rows=}")
         return rows[len(rows) - limit if limit else 0:]
 
     def getLast(self, table, columns):
 
         return self.get(table, columns, limit=1)[0]
 
-    
     def write(self, table, columns, data):
-        query = "INSERT INTO {0} ({1}) VALUES ({2});".format(table, columns, data)
+        query = "INSERT INTO ? (?) VALUES (?);", (table, columns, data)
         """
         import datetime
         from cdms.helperClass import Helper
@@ -78,7 +72,7 @@ class Database:
 
     def delete(self, table, colums, data):
 
-        query = "DELETE FROM {0} WHERE id = {2} ;".format(table, colums, data)
+        query = "DELETE FROM ? WHERE id = ? ;", (table, data)
         """
         import datetime
         from cdms.helperClass import Helper
@@ -91,10 +85,10 @@ class Database:
         """
         self.cursor.execute(query)
 
-    def updatePassword(self, table, password, username):
+    def updatePassword(self, table, password, id):
 
         try:
-            query = "UPDATE {0} SET password = {1} WHERE id = 1;".format(table, password, username)
+            query = "UPDATE ? SET password = ? WHERE id = ?;", (table, password, id)
             self.cursor.execute(query)
             """
             import datetime
@@ -109,9 +103,8 @@ class Database:
         except:
             print("something went wrong")
 
-
     def query(self, sql, values=None):
-        if values == None:
+        if values is None:
             self.cursor.execute(sql)
         else:
             self.cursor.execute(sql, values)
